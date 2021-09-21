@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/iamjosephmj/kotlin-design-patters/blob/main/images/structures.jpg" />
+  <img src="https://github.com/iamjosephmj/kotlin-design-patters/blob/main/media/structures.jpg" />
 </p>
 
 
