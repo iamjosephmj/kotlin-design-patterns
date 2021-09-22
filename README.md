@@ -65,7 +65,7 @@ design pattern lets you ensure that a class has only one instance, while providi
 
 Kotlin gives you out of the box support for the singleton implementation using the keyword **object**
 
-refer to [Singleton.kt](https://github.com/iamjosephmj/kotlin-design-patters/)
+refer to [Singleton.kt](https://github.com/iamjosephmj/kotlin-design-patterns/blob/main/src/main/kotlin/Singleton.kt)
 ```kotlin
 
 object NetworkDriver {
