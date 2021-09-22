@@ -29,7 +29,7 @@ some super useful links to get the learning materials that I personally recommen
 # Table Of Contents
 
 * [Introduction](#Introduction)
-* [Creational Patterns](#Creational Patterns)
+* [Creational-Patterns](#Creational-Patterns)
   * [Singleton](#Singleton)
 
 
