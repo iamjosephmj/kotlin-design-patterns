@@ -24,10 +24,13 @@ some super useful links to get the learning materials that I personally recommen
 - [Kotlin-depth-Vol-II](https://www.amazon.com/Kotlin-depth-Vol-II-comprehensive-multi-paradigm/dp/9389423228)
 - [Kotlin Lang](https://kotlinlang.org/docs/getting-started.html)
 - [Kotlin Bootcamp](https://developer.android.com/codelabs/kotlin-bootcamp-introduction)
+- [Refactoring Guru](https://refactoring.guru/)
 
 # Table Of Contents
 
 * [Introduction](#Introduction)
+* [Creational Patterns](#Creational Patterns)
+  * [Singleton](#Singleton)
 
 
 ## Introduction
@@ -46,7 +49,33 @@ This can also help you achieve some good objectives like separation-of-concerns,
 This pattern gives more emphasis on how an object function inside your code. They are more concerned  with algorithms 
 and the assignment of responsibilities between objects. 
 
+## Creational Patterns
 
+### Singleton
 
+This is a very simple/common design pattern. So, lets assume that you have few components in your application that are 
+trying to access some external environments/utility like "Network Communication Instance". Instantiating the such an 
+instance on demand is quite an overhead. So, we basically need only "One" instance of such services. This single instance 
+idea here is pretty memory efficient. Because we don't need an additional space in the memory heap. In other words this 
+design pattern lets you ensure that a class has only one instance, while providing a global access point to this instance. 
+
+<p align="center">
+  <img src="https://github.com/iamjosephmj/kotlin-design-patters/blob/main/media/singleton.png" />
+</p>
+
+Kotlin gives you out of the box support for the singleton implementation using the keyword **object**
+
+refer to [Singleton.kt](https://github.com/iamjosephmj/kotlin-design-patters/)
+```kotlin
+
+object NetworkDriver {
+    init {
+        println("Initializing: $this")
+    }
+
+    fun log(): NetworkDriver = apply { println("Network driver: $this") }
+}
+
+```
 
  
