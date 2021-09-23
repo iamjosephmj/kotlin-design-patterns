@@ -24,13 +24,13 @@ some super useful links to get the learning materials that I personally recommen
 - [Kotlin-depth-Vol-II](https://www.amazon.com/Kotlin-depth-Vol-II-comprehensive-multi-paradigm/dp/9389423228)
 - [Kotlin Lang](https://kotlinlang.org/docs/getting-started.html)
 - [Kotlin Bootcamp](https://developer.android.com/codelabs/kotlin-bootcamp-introduction)
-- [Refactoring Guru](https://refactoring.guru/)
 
 # Table Of Contents
 
 * [Introduction](#Introduction)
 * [Creational-Patterns](#Creational-Patterns)
   * [Singleton](#Singleton)
+  * [Factory](#Factory)
 
 
 ## Introduction
@@ -78,4 +78,65 @@ object NetworkDriver {
 
 ```
 
- 
+### Factory
+
+As the name sounds, Factory is something that a particular type of product. Taking this in the kotlin perspective, 
+You can think of factory as a class that can instantiate objects according to the needs of the subclass. In other words 
+Factory method provides an interface of creating objects in the super class but allows the subclass to alter the type 
+of objects that will be created. 
+
+<p align="center">
+  <img src="https://github.com/iamjosephmj/kotlin-design-patters/blob/main/media/factory.png" />
+</p>
+
+refer to [Factory.kt](https://github.com/iamjosephmj/kotlin-design-patterns/blob/main/src/main/kotlin/Factory.kt)
+
+For the sake of explanation, let's take the case of currencies. Ideally, we need to abstract the country from currency. 
+"Abstract"? yep, we can you interface for this purpose. But as this repos is completely kotlin based we use a special 
+class named [sealed class](https://kotlinlang.org/docs/sealed-classes.html) for restricting our hierarchy.
+
+```kotlin
+
+sealed class Country
+
+```
+
+what else? we also need children of **Country**:
+
+```kotlin
+
+object  Canada: Country()
+object Spain: Country()
+class Greece(val someProperty: String): Country()
+data class USA(val someProperty: String): Country()
+
+```
+
+basically we write all the implementations inside the parent **sealed class**. This is only done to avoid confusions.
+
+Now, let's take the nature of Factory. Do we need multiple instances of factory? nope. For this example, you only need 
+one. Yes, I am referring to using [Singleton Pattern](#Singleton) for Factory class.
+
+```kotlin
+
+object CurrencyFactory {
+    fun currencyForCountry(country: Country): Currency =
+        when(country) {
+            is Spain -> Currency("EUR")
+            is Greece -> Currency("EUR")
+            is USA -> Currency("USD")
+            is Country.Canada -> Currency("CAD")
+        }
+}
+
+```
+
+We are now pretty much done with the Factory implementation. Now, let's get to the real bread and butter of this 
+methodology.
+
+```kotlin
+
+ val greekCurrency = CurrencyFactory.currencyForCountry(Greece("")).code
+ println("Greek currency: $greekCurrency")
+
+```
