@@ -5,8 +5,8 @@ import org.junit.Test
 sealed class Country
 
 object Spain : Country()
-class Greece(val someProperty: String) : Country()
-data class USA(val someProperty: String) : Country()
+object Greece : Country()
+object USA : Country()
 object Poland : Country()
 object Canada : Country()
 
@@ -26,10 +26,10 @@ object CurrencyFactory {
 class FactoryMethodTest {
     @Test
     fun currencyTest() {
-        val usaCurrency = CurrencyFactory.currencyForCountry(USA("")).code
+        val usaCurrency = CurrencyFactory.currencyForCountry(USA).code
         println("USA currency: $usaCurrency")
 
-        val greekCurrency = CurrencyFactory.currencyForCountry(Greece("")).code
+        val greekCurrency = CurrencyFactory.currencyForCountry(Greece).code
         println("Greek currency: $greekCurrency")
 
         assert(greekCurrency == "EUR")

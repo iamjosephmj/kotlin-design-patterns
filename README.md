@@ -105,10 +105,11 @@ what else? we also need children of **Country**:
 
 ```kotlin
 
-object  Canada: Country()
-object Spain: Country()
-class Greece(val someProperty: String): Country()
-data class USA(val someProperty: String): Country()
+object Spain : Country()
+object Greece : Country()
+object USA : Country()
+object Poland : Country()
+object Canada : Country()
 
 ```
 
@@ -120,13 +121,14 @@ one. Yes, I am referring to using [Singleton Pattern](#Singleton) for Factory cl
 ```kotlin
 
 object CurrencyFactory {
-    fun currencyForCountry(country: Country): Currency =
-        when(country) {
-            is Spain -> Currency("EUR")
-            is Greece -> Currency("EUR")
-            is USA -> Currency("USD")
-            is Country.Canada -> Currency("CAD")
-        }
+  fun currencyForCountry(country: Country): Currency =
+    when (country) {
+      is Spain -> Currency("EUR")
+      is Greece -> Currency("EUR")
+      is USA -> Currency("USD")
+      is Canada -> Currency("CAD")
+      is Poland -> Currency("PLN")
+    }
 }
 
 ```
@@ -136,7 +138,7 @@ methodology.
 
 ```kotlin
 
- val greekCurrency = CurrencyFactory.currencyForCountry(Greece("")).code
+ val greekCurrency = CurrencyFactory.currencyForCountry(Greece).code
  println("Greek currency: $greekCurrency")
 
 ```
