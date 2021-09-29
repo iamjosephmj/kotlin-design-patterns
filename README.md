@@ -31,6 +31,7 @@ some super useful links to get the learning materials that I personally recommen
 * [Creational-Patterns](#Creational-Patterns)
   * [Singleton](#Singleton)
   * [Factory](#Factory)
+  * [Abstract Factory](#Abstract-Factory)
 
 
 ## Introduction
