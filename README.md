@@ -143,3 +143,89 @@ methodology.
  println("Greek currency: $greekCurrency")
 
 ```
+
+### Abstract Factory
+
+<p align="center">
+  <img src="https://github.com/iamjosephmj/kotlin-design-patters/blob/main/media/abstractfactory.png" />
+</p>
+
+You can think of abstract factory as kind of another level on the factory method that we had seen above.
+Let's take the above-mentioned example, Let's say we have a display/presentation that will be fetching the data from 
+a certain data source. This Data-source is can be thought of as an interface that will have multiple implementation. 
+There are two key reasons for doing this:
+
+- The presentation layer should have a clear boundary with the dataSource/Factory layers.
+- The only guy that presentation need to have a contract is the DataSource-Interface (Dependency rule).
+
+So, Being that said, The presentation layer should get the data according to the request that they are sending. i.e. It 
+should not care about how the data is created/delivered. Now here comes the **Abstract Factory**. In other words, we can
+think of abstract factory as a design pattern as  is a creational design pattern that lets you produce families of 
+related objects without specifying their concrete classes.
+
+Now, lets dive in to the example. We can have the two data sources as Database and Network.
+
+Let's start with the structure of the data source:
+
+```kotlin
+
+interface DataSource
+
+```
+
+now, let's have the two implementations of the DataSource.
+
+```kotlin
+
+class DatabaseDataSource: DataSource
+
+class NetworkDataSource: DataSource
+
+```
+
+Let's start of with a blueprint of the Abstract factory. Fow now I am using [Abstract class](https://www.geeksforgeeks.org/kotlin-abstract-class/) from kotlin that gives us 
+the structure/body for factory.
+
+```kotlin
+
+abstract class DataSourceFactory {
+    abstract fun makeDataSource(): DataSource
+}
+
+```
+
+Now, let's have an implementation for the same:
+
+```kotlin
+
+class NetworkFactory: DataSourceFactory() {
+    override fun makeDataSource(): DataSource = NetworkDataSource()
+}
+
+class DatabaseFactory: DataSourceFactory() {
+    override fun makeDataSource(): DataSource = DatabaseDataSource()
+}
+
+```
+
+Now here is the core part of the factory method. We need to have a [static function](https://kotlinlang.org/docs/object-declarations.html) 
+that can give you the factory that you needed to produce the specific datasource.
+
+```kotlin
+
+ companion object {
+        inline fun <reified T: DataSource> createFactory(): DataSourceFactory =
+                when(T::class) {
+                    DatabaseDataSource::class -> DatabaseFactory()
+                    NetworkDataSource::class -> NetworkFactory()
+                    else -> throw IllegalArgumentException()
+                }
+    }
+
+```
+
+This is the only implementation that we are going to use in the DataSourceFactory class for the abstracted-object 
+delivery.
+
+please take a look at the [AbstractFactory](https://github.com/iamjosephmj/kotlin-design-patterns/blob/main/src/main/kotlin/AbstractFactory.kt) 
+to see the complete code example.
