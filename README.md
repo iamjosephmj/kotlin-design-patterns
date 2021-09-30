@@ -227,5 +227,41 @@ that can give you the factory that you needed to produce the specific datasource
 This is the only implementation that we are going to use in the DataSourceFactory class for the abstracted-object 
 delivery.
 
-please take a look at the [AbstractFactory](https://github.com/iamjosephmj/kotlin-design-patterns/blob/main/src/main/kotlin/AbstractFactory.kt) 
+please take a look at the [AbstractFactory.kt](https://github.com/iamjosephmj/kotlin-design-patterns/blob/main/src/main/kotlin/AbstractFactory.kt) 
 to see the complete code example.
+
+### Builder Pattern
+
+Basically a builder is used when we have multiple parameters to initialize. This pattern will save you a lot of 
+boilerplate code that you will need to write for the constructors. In other words, this pattern lets you construct 
+complex objects step by step. The pattern allows you to produce different types and representations of an object 
+using the same construction code.
+
+```kotlin
+
+class Component private constructor(builder: Builder) {
+    var param1: String? = null
+    var param2: Int? = null
+   
+    class Builder {
+        private var param1: String? = null
+        private var param2: Int? = null
+   
+        fun setParam1(param1: String) = apply { this.param1 = param1 }
+        fun setParam2(param2: Int) = apply { this.param2 = param2 }
+        fun build() = Component(this)
+
+        fun getParam1() = param1
+        fun getParam2() = param2
+        fun getParam3() = param3
+    }
+
+    init {
+        param1 = builder.getParam1()
+        param2 = builder.getParam2()
+    }
+}
+
+```
+
+refer to the code example [Builder.kt](https://github.com/iamjosephmj/kotlin-design-patterns/blob/main/src/main/kotlin/Builder.kt)
