@@ -32,6 +32,7 @@ some super useful links to get the learning materials that I personally recommen
   * [Singleton](#Singleton)
   * [Factory](#Factory)
   * [Abstract Factory](#Abstract-Factory)
+  * [Builder](#Builder)
 
 
 ## Introduction
@@ -230,7 +231,7 @@ delivery.
 please take a look at the [AbstractFactory.kt](https://github.com/iamjosephmj/kotlin-design-patterns/blob/main/src/main/kotlin/AbstractFactory.kt) 
 to see the complete code example.
 
-### Builder Pattern
+### Builder
 
 Basically a builder is used when we have multiple parameters to initialize. This pattern will save you a lot of 
 boilerplate code that you will need to write for the constructors. In other words, this pattern lets you construct 
