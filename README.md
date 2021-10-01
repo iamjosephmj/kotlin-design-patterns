@@ -34,6 +34,7 @@ some super useful links to get the learning materials that I personally recommen
     * [Abstract Factory](#Abstract-Factory)
     * [Builder](#Builder)
     * [Lazy Initialization](#Lazy-Initialization)
+    * [Prototype](#Prototype)
 
 ## Introduction
 
@@ -313,3 +314,26 @@ class Foo {
 }
 
 ```
+
+### Prototype
+
+This design pattern let's copy an existing object without depending on their classes. All we need are interfaces. The 
+copied object should provide the full functionality of the object that it was cloned. Yes, I am referring to the 
+cloneable interface. But Again, Kotlin gives you out of the box support for implementing this. You can use this class 
+named [data](https://kotlinlang.org/docs/data-classes.html) for the same.
+
+```kotlin
+
+data class SomeClass(val item1:Int,val item2:Int)
+
+```
+
+you can clone/copy the same by:
+
+```kotlin
+
+val inst = SomeClass(1,2)
+val inst2 = inst.copy()
+
+```
+Here, changing `inst` doesn't impact `inst2`
