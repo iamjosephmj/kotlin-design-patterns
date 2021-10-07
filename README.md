@@ -337,3 +337,24 @@ val inst2 = inst.copy()
 
 ```
 Here, changing `inst` doesn't impact `inst2`
+
+You can even copy the value even if you had tweaked the variables.
+
+let's consider a code example with mutable variables
+
+```kotlin
+
+data class SomeClass(var item1:Int,val item2:Int)
+
+```
+
+you can clone/copy the same even after tweaking the values:
+
+```kotlin
+
+val inst = SomeClass(1,2)
+inst.item1 = 10
+
+// you will get the latest value.
+val inst2 = inst.copy()
+

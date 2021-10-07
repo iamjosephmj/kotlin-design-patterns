@@ -1,7 +1,5 @@
 package main.kotlin
 
-import org.junit.Test
-
 
 class Component private constructor(builder: Builder) {
     var param1: String? = null
@@ -29,23 +27,5 @@ class Component private constructor(builder: Builder) {
         param1 = builder.getParam1()
         param2 = builder.getParam2()
         param3 = builder.getParam3()
-    }
-}
-
-class ComponentTest {
-    @Test
-    fun builderTest() {
-        val component = Component.Builder()
-            .setParam1("Some value")
-            .setParam3(true)
-            .build()
-        println(component)
-        println(component.param1)
-        println(component.param3)
-
-        assert(component.param1 == "Some value")
-        assert(component.param3 == true)
-        assert(component.param2 == null)
-
     }
 }

@@ -1,8 +1,5 @@
 package main.kotlin
 
-import org.junit.Assert.assertTrue
-import org.junit.Test
-
 
 interface DataSource
 
@@ -29,15 +26,4 @@ class NetworkFactory : DataSourceFactory() {
 
 class DatabaseFactory : DataSourceFactory() {
     override fun makeDataSource(): DataSource = DatabaseDataSource()
-}
-
-class AbstractFactoryTest {
-    @Test
-    fun test() {
-        val datasourceFactory = DataSourceFactory.createFactory<DatabaseDataSource>()
-        val dataSource = datasourceFactory.makeDataSource()
-        println("Created datasource $dataSource")
-
-        assertTrue(dataSource is DatabaseDataSource)
-    }
 }
