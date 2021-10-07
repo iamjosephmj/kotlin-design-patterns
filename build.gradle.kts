@@ -4,17 +4,8 @@ plugins {
     kotlin("jvm") version "1.6.0-M1"
 }
 
-dependencies {
-    api("junit:junit:4.13")
-    implementation("junit:junit:4.13")
-    testImplementation("junit:junit:4.13")
-    implementation(kotlin("stdlib-jdk8"))
-}
-
-configurations {
-    implementation {
-        resolutionStrategy.failOnVersionConflict()
-    }
+repositories {
+    mavenCentral()
 }
 
 sourceSets {
@@ -34,13 +25,18 @@ tasks {
     }
 }
 
+configurations {
+    implementation {
+        resolutionStrategy.failOnVersionConflict()
+    }
+}
+
 dependencies {
-
+    api("junit:junit:4.13")
+    implementation("junit:junit:4.13")
+    testImplementation("junit:junit:4.13")
+    implementation(kotlin("stdlib-jdk8"))
 }
-repositories {
-    mavenCentral()
-}
-
 
 val compileKotlin: KotlinCompile by tasks
 compileKotlin.kotlinOptions {
