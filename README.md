@@ -29,12 +29,14 @@ some super useful links to get the learning materials that I personally recommen
 
 * [Introduction](#Introduction)
 * [Creational-Patterns](#Creational-Patterns)
-    * [Singleton](#Singleton)
-    * [Factory](#Factory)
-    * [Abstract Factory](#Abstract-Factory)
-    * [Builder](#Builder)
-    * [Lazy Initialization](#Lazy-Initialization)
-    * [Prototype](#Prototype)
+  * [Singleton](#Singleton)
+  * [Factory](#Factory)
+  * [Abstract Factory](#Abstract-Factory)
+  * [Builder](#Builder)
+  * [Lazy Initialization](#Lazy-Initialization)
+  * [Prototype](#Prototype)
+* [Structural-Patterns](#Structural-Patterns)
+  * [Adapter](#Adapter)
 
 ## Introduction
 
@@ -62,7 +64,7 @@ the assignment of responsibilities between objects.
 ### Singleton
 
 This is a very simple/common design pattern. So, lets assume that you have few components in your application that are
-trying to access some external environments/utility like "Network Communication Instance". Instantiating the such an
+trying to access some external environments/utility like "Network Communication Instance". Instantiating such an
 instance on demand is quite an overhead. So, we basically need only "One" instance of such services. This single
 instance idea here is pretty memory efficient. Because we don't need an additional space in the memory heap. In other
 words this design pattern lets you ensure that a class has only one instance, while providing a global access point to
@@ -90,7 +92,7 @@ object NetworkDriver {
 
 ### Factory
 
-As the name sounds, Factory is something that a particular type of product. Taking this in the kotlin perspective, You
+As the name sounds, Factory is something that produces a particular type of product. Taking this in the kotlin perspective, You
 can think of factory as a class that can instantiate objects according to the needs of the subclass. In other words
 Factory method provides an interface of creating objects in the super class but allows the subclass to alter the type of
 objects that will be created.
@@ -102,7 +104,7 @@ objects that will be created.
 refer to [Factory.kt](https://github.com/iamjosephmj/kotlin-design-patterns/blob/main/src/main/kotlin/Factory.kt)
 
 For the sake of explanation, let's take the case of currencies. Ideally, we need to abstract the country from currency.
-"Abstract"? yep, we can you interface for this purpose. But as this repos is completely kotlin based we use a special
+"Abstract"? yep, you can you interface for this purpose. But as this repos is completely kotlin based we use a special
 class named [sealed class](https://kotlinlang.org/docs/sealed-classes.html) for restricting our hierarchy.
 
 ```kotlin
@@ -165,9 +167,9 @@ source. This Data-source is can be thought of as an interface that will have mul
 reasons for doing this:
 
 - The presentation layer should have a clear boundary with the dataSource/Factory layers.
-- The only guy that presentation need to have a contract is the DataSource-Interface (Dependency rule).
+- The only thing that the presentation layer needs is to have a contract to the DataSource-Interface (Dependency Rule).
 
-So, Being that said, The presentation layer should get the data according to the request that they are sending. i.e. It
+So, that being said, The presentation layer should get the data according to the request that they are sending. i.e. It
 should not care about how the data is created/delivered. Now here comes the **Abstract Factory**. In other words, we can
 think of abstract factory as a design pattern as is a creational design pattern that lets you produce families of
 related objects without specifying their concrete classes.
@@ -317,9 +319,9 @@ class Foo {
 
 ### Prototype
 
-This design pattern let's copy an existing object without depending on their classes. All we need are interfaces. The 
-copied object should provide the full functionality of the object that it was cloned. Yes, I am referring to the 
-cloneable interface. But Again, Kotlin gives you out of the box support for implementing this. You can use this class 
+This design pattern let's copy an existing object without depending on their classes. All we need are interfaces. The
+copied object should provide the full functionality of the object that it was cloned. Yes, I am referring to the
+cloneable interface. But Again, Kotlin gives you out of the box support for implementing this. You can use this class
 named [data](https://kotlinlang.org/docs/data-classes.html) for the same.
 
 ```kotlin
@@ -336,6 +338,7 @@ val inst = SomeClass(1,2)
 val inst2 = inst.copy()
 
 ```
+
 Here, changing `inst` doesn't impact `inst2`
 
 You can even copy the value even if you had tweaked the variables.
@@ -357,4 +360,65 @@ inst.item1 = 10
 
 // you will get the latest value.
 val inst2 = inst.copy()
+```
 
+## Structural-Patterns
+
+### Adapter
+If you have experience with Android development, Then you will be pretty familiar with the name Adapter. Basically
+an Adapter converts an interface of a class into another interface that client expects. You can think of it as, You
+have two different classes `A` and `B` that both have their own interfaces (Kotlin-Interface, methods .etc.) So, like we
+said, The adapter pattern converts interface `A` to interface `B`. In other words Adapter pattern gives the class `B` to
+adapt and accept the changes that are posted from `A`.
+
+<p align="center">
+  <img src="https://github.com/iamjosephmj/kotlin-design-patters/blob/main/media/adapter.png" />
+</p>
+
+Let's consider this example. Consider that we have a client class which interacts to the Target class. This Target class
+has an interface -> <TargetInterface> that has a method named call(). On the other side, We have a library named Adaptee
+that has an interface -> <AdapteeInterface> that will have a function named specificCall(). 
+
+Adapter class helps us in converting the call() to specificCall().
+
+Interfaces required:
+
+```kotlin
+
+interface TargetInterface {
+    fun call(limit: Int): List<Int>
+}
+
+interface AdapteeInterface {
+    fun specificCall(data: List<String>): String
+}
+
+interface TargetAdapteeConverter {
+  fun convertTargetToAdaptee(data: List<Int>): List<String>
+}
+
+```
+
+Class Implementations
+
+```kotlin
+
+class Target : TargetInterface {
+    override fun call(limit: Int): List<Int> = (0..limit).toList()
+}
+
+class Adaptee : AdapteeInterface {
+    override fun specificCall(data: List<String>): String = data.map { it }.reduce { acc, s -> "$acc$s" }
+}
+
+``` 
+
+Adapter Implementation
+
+```kotlin
+
+class Adapter : TargetAdapteeConverter {
+    override fun convertTargetToAdaptee(data: List<Int>): List<String> = data.map { it.toString() }
+}
+
+```
