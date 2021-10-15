@@ -37,6 +37,7 @@ some super useful links to get the learning materials that I personally recommen
     * [Prototype](#Prototype)
 * [Structural-Patterns](#Structural-Patterns)
     * [Adapter](#Adapter)
+    * [Bridge](#Bridge)
 
 ## Introduction
 
