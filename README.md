@@ -29,14 +29,14 @@ some super useful links to get the learning materials that I personally recommen
 
 * [Introduction](#Introduction)
 * [Creational-Patterns](#Creational-Patterns)
-  * [Singleton](#Singleton)
-  * [Factory](#Factory)
-  * [Abstract Factory](#Abstract-Factory)
-  * [Builder](#Builder)
-  * [Lazy Initialization](#Lazy-Initialization)
-  * [Prototype](#Prototype)
+    * [Singleton](#Singleton)
+    * [Factory](#Factory)
+    * [Abstract Factory](#Abstract-Factory)
+    * [Builder](#Builder)
+    * [Lazy Initialization](#Lazy-Initialization)
+    * [Prototype](#Prototype)
 * [Structural-Patterns](#Structural-Patterns)
-  * [Adapter](#Adapter)
+    * [Adapter](#Adapter)
 
 ## Introduction
 
@@ -92,10 +92,10 @@ object NetworkDriver {
 
 ### Factory
 
-As the name sounds, Factory is something that produces a particular type of product. Taking this in the kotlin perspective, You
-can think of factory as a class that can instantiate objects according to the needs of the subclass. In other words
-Factory method provides an interface of creating objects in the super class but allows the subclass to alter the type of
-objects that will be created.
+As the name sounds, Factory is something that produces a particular type of product. Taking this in the kotlin
+perspective, You can think of factory as a class that can instantiate objects according to the needs of the subclass. In
+other words Factory method provides an interface of creating objects in the super class but allows the subclass to alter
+the type of objects that will be created.
 
 <p align="center">
   <img src="https://github.com/iamjosephmj/kotlin-design-patters/blob/main/media/factory.png" />
@@ -326,7 +326,7 @@ named [data](https://kotlinlang.org/docs/data-classes.html) for the same.
 
 ```kotlin
 
-data class SomeClass(val item1:Int,val item2:Int)
+data class SomeClass(val item1: Int, val item2: Int)
 
 ```
 
@@ -334,7 +334,7 @@ you can clone/copy the same by:
 
 ```kotlin
 
-val inst = SomeClass(1,2)
+val inst = SomeClass(1, 2)
 val inst2 = inst.copy()
 
 ```
@@ -347,7 +347,7 @@ let's consider a code example with mutable variables
 
 ```kotlin
 
-data class SomeClass(var item1:Int,val item2:Int)
+data class SomeClass(var item1: Int, val item2: Int)
 
 ```
 
@@ -355,7 +355,7 @@ you can clone/copy the same even after tweaking the values:
 
 ```kotlin
 
-val inst = SomeClass(1,2)
+val inst = SomeClass(1, 2)
 inst.item1 = 10
 
 // you will get the latest value.
@@ -365,9 +365,10 @@ val inst2 = inst.copy()
 ## Structural-Patterns
 
 ### Adapter
-If you have experience with Android development, Then you will be pretty familiar with the name Adapter. Basically
-an Adapter converts an interface of a class into another interface that client expects. You can think of it as, You
-have two different classes `A` and `B` that both have their own interfaces (Kotlin-Interface, methods .etc.) So, like we
+
+If you have experience with Android development, Then you will be pretty familiar with the name Adapter. Basically an
+Adapter converts an interface of a class into another interface that client expects. You can think of it as, You have
+two different classes `A` and `B` that both have their own interfaces (Kotlin-Interface, methods .etc.) So, like we
 said, The adapter pattern converts interface `A` to interface `B`. In other words Adapter pattern gives the class `B` to
 adapt and accept the changes that are posted from `A`.
 
@@ -377,7 +378,7 @@ adapt and accept the changes that are posted from `A`.
 
 Let's consider this example. Consider that we have a client class which interacts to the Target class. This Target class
 has an interface -> <TargetInterface> that has a method named call(). On the other side, We have a library named Adaptee
-that has an interface -> <AdapteeInterface> that will have a function named specificCall(). 
+that has an interface -> <AdapteeInterface> that will have a function named specificCall().
 
 Adapter class helps us in converting the call() to specificCall().
 
@@ -394,7 +395,7 @@ interface AdapteeInterface {
 }
 
 interface TargetAdapteeConverter {
-  fun convertTargetToAdaptee(limit: Int): List<String>
+    fun convertTargetToAdaptee(limit: Int): List<String>
 }
 
 ```
@@ -418,10 +419,65 @@ Adapter Implementation
 ```kotlin
 
 class Adapter : TargetAdapteeConverter {
-  override fun convertTargetToAdaptee(limit: Int): List<String> {
-    val target = Target()
-    return target.call(limit).map { it.toString() }
-  }
+    override fun convertTargetToAdaptee(limit: Int): List<String> {
+        val target = Target()
+        return target.call(limit).map { it.toString() }
+    }
+}
+
+```
+
+### Bridge
+
+Let's now look into a hypothetical example.
+
+<p align="center">
+  <img src="https://github.com/iamjosephmj/kotlin-design-patters/blob/main/media/bridge.png" />
+</p>
+
+In the above example we have a class named ShapeColor(stores shape and colors). So, we had derived `RedCircle`,
+`BlueCircle`, `RedSquare` and `BlueSquare`. We presently have only two features, but what if you wanted to add a new
+feature? - You will need to think of making the use of inheritance. Consider there are a lot more features to be added
+in the future down the line. Then this approach is not going to scale. This is where the Bridge pattern comes into play.
+
+A better solution for the above problem will be to separate each features and connect them in some way.
+
+<p align="center">
+  <img src="https://github.com/iamjosephmj/kotlin-design-patters/blob/main/media/bridge2.png" />
+</p>
+
+This is how you structure the classes:
+
+Interfaces
+
+```kotlin
+
+interface Shape {
+    fun renderShape(): String
+}
+
+interface Color {
+    fun renderColorShape(): String
+}
+
+```
+
+Shape Implementation
+
+```kotlin
+
+class ShapeImpl(private val shapeName: String) : Shape {
+    override fun renderShape(): String = shapeName
+}
+
+```
+
+Bridge
+
+```kotlin
+
+class ColorShapeImpl(private val color: String,/* Bridge */ private val shape: Shape) : Color {
+    override fun renderColorShape(): String = "$color ${shape.renderShape()}"
 }
 
 ```
