@@ -394,7 +394,7 @@ interface AdapteeInterface {
 }
 
 interface TargetAdapteeConverter {
-  fun convertTargetToAdaptee(data: List<Int>): List<String>
+  fun convertTargetToAdaptee(limit: Int): List<String>
 }
 
 ```
@@ -418,7 +418,10 @@ Adapter Implementation
 ```kotlin
 
 class Adapter : TargetAdapteeConverter {
-    override fun convertTargetToAdaptee(data: List<Int>): List<String> = data.map { it.toString() }
+  override fun convertTargetToAdaptee(limit: Int): List<String> {
+    val target = Target()
+    return target.call(limit).map { it.toString() }
+  }
 }
 
 ```

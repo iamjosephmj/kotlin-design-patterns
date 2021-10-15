@@ -12,7 +12,7 @@ interface AdapteeInterface {
 }
 
 interface TargetAdapteeConverter {
-    fun convertTargetToAdaptee(data: List<Int>): List<String>
+    fun convertTargetToAdaptee(limit: Int): List<String>
 }
 
 // Implementations
@@ -26,7 +26,11 @@ class Adaptee : AdapteeInterface {
 
 // Adapter
 class Adapter : TargetAdapteeConverter {
-    override fun convertTargetToAdaptee(data: List<Int>): List<String> = data.map { it.toString() }
+    override fun convertTargetToAdaptee(limit: Int): List<String> {
+        // Mappings are done here.
+        val target = Target()
+        return target.call(limit).map { it.toString() }
+    }
 }
 
 class AdapterTest {
@@ -34,12 +38,9 @@ class AdapterTest {
     fun adapterTest() {
 
         val adapter = Adapter()
-        val target = Target()
         val adaptee = Adaptee()
 
-        val intData = target.call(3)
-
-        val adapterResult = adapter.convertTargetToAdaptee(intData)
+        val adapterResult = adapter.convertTargetToAdaptee(3)
 
         val result = adaptee.specificCall(adapterResult)
 
