@@ -488,7 +488,7 @@ class ColorShapeImpl(private val color: String,/* Bridge */ private val shape: S
 
 This is the most commonly used design pattern, We can think of facade as an interface to a complex functionality. This
 will also help us in eliminating the need of designing complex objects and their memory management. In a broader sense,
-his eliminates and simplifies the client side complexity and gives you a simple higher level API.
+facade eliminates and simplifies the client side complexity and gives you a simple higher level API.
 
 <p align="center">
   <img src="https://github.com/iamjosephmj/kotlin-design-patters/blob/main/media/facade.png" />
@@ -526,7 +526,7 @@ class Database(private val databaseName: String) {
 
 ```
 
-let's now design a use class that can in that is able to pass in values to our repository.
+let's now design a User class that can in that is able to pass in values to our repository.
 
 ```kotlin
 
