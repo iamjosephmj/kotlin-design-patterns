@@ -38,6 +38,7 @@ some super useful links to get the learning materials that I personally recommen
 * [Structural-Patterns](#Structural-Patterns)
     * [Adapter](#Adapter)
     * [Bridge](#Bridge)
+    * [Facade](#Facade)
 
 ## Introduction
 
@@ -377,9 +378,9 @@ adapt and accept the changes that are posted from `A`.
   <img src="https://github.com/iamjosephmj/kotlin-design-patters/blob/main/media/adapter.png" />
 </p>
 
-Let's consider this example. Consider that we have a client class which interacts to the Target class. This Target class
-has an interface -> <TargetInterface> that has a method named call(). On the other side, We have a library named Adaptee
-that has an interface -> <AdapteeInterface> that will have a function named specificCall().
+Consider that we have a client class that interacts with the Target class. This Target class has an interface ->
+that has a method named call(). On the other side, We have a library named Adaptee that has an interface ->
+that will have a function named specificCall().
 
 Adapter class helps us in converting the call() to specificCall().
 
@@ -436,10 +437,10 @@ Let's now look into a hypothetical example.
   <img src="https://github.com/iamjosephmj/kotlin-design-patters/blob/main/media/bridge.png" />
 </p>
 
-In the above example we have a class named ShapeColor(stores shape and colors). So, we had derived `RedCircle`,
+In the above example, we have a class named ShapeColor(stores shape and colors). So, we had derived `RedCircle`,
 `BlueCircle`, `RedSquare` and `BlueSquare`. We presently have only two features, but what if you wanted to add a new
-feature? - You will need to think of making the use of inheritance. Consider there are a lot more features to be added
-in the future down the line. Then this approach is not going to scale. This is where the Bridge pattern comes into play.
+feature? - You will need to think of making use of inheritance. Consider there are a lot more features to be added in
+the future down the line. Then this approach is not going to scale. This is where the Bridge pattern comes into play.
 
 A better solution for the above problem will be to separate each features and connect them in some way.
 
@@ -479,6 +480,72 @@ Bridge
 
 class ColorShapeImpl(private val color: String,/* Bridge */ private val shape: Shape) : Color {
     override fun renderColorShape(): String = "$color ${shape.renderShape()}"
+}
+
+```
+
+### Facade
+
+This is the most commonly used design pattern, We can think of facade as an interface to a complex functionality. This
+will also help us in eliminating the need of designing complex objects and their memory management. In a broader sense,
+his eliminates and simplifies the client side complexity and gives you a simple higher level API.
+
+<p align="center">
+  <img src="https://github.com/iamjosephmj/kotlin-design-patters/blob/main/media/facade.png" />
+</p>
+
+Let's consider a simple database implementation
+
+```kotlin
+
+
+class Database(private val databaseName: String) {
+
+    // ignore the declaration
+    private val database by lazy {
+        /*
+        * consider that we are mocking the database as a hashmap for this example sake.
+        */
+        hashMapOf<String, String>()
+    }
+
+    fun store(key: String, value: String) = apply {
+        database[key] = value
+    }
+
+    fun read(key: String): String? = database[key]
+
+
+    fun commit() {
+        // mock apply
+        print("status of database $databaseName saved successfully!")
+    }
+}
+
+
+
+```
+
+let's now design a use class that can in that is able to pass in values to our repository.
+
+```kotlin
+
+data class User(val userId: String)
+
+```
+
+Now, As the final step we encapsulate all the User-DB interactions inside the repository:
+
+```kotlin
+
+class Repository(private val database: Database) {
+
+    fun storeUser(user: User) {
+        database.store(USER_ID, user.userId)
+        database.commit()
+    }
+
+    fun fetchUser() = database.read(USER_ID)
 }
 
 ```
