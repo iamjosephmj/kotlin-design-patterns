@@ -39,6 +39,7 @@ some super useful links to get the learning materials that I personally recommen
     * [Adapter](#Adapter)
     * [Bridge](#Bridge)
     * [Facade](#Facade)
+    * [Decorator](#Decorator)
 
 ## Introduction
 
@@ -549,3 +550,67 @@ class Repository(private val database: Database) {
 }
 
 ```
+
+### Decorator
+
+This pattern is also called wrapper pattern. The basic idea about this design pattern is that you are going to attach a
+new behaviour to an object. But, critically you cannot change the existing code. Hmmm sounds like a Hotfix release
+right?... This can be because the existing code is in a different library or we want to preserve some functionality that
+already exists but the main idea is that we want to add some more features to it (override).
+
+For instance, let's take a coffee machine example:
+
+Consider we have a CoffeeMachine Interface that is having the blueprint of the functionality of a coffee maker.
+
+```kotlin
+
+interface CoffeeMachine {
+
+    // Functionality 1
+    fun getHotWater()
+
+    // Functionality 2
+    fun makeCoffee()
+
+}
+
+``` 
+
+Now, One of my friend named Brett bought a Coffee machine CF from a nearby store. Now, This CF is made based on the
+blueprint CoffeeMachine.
+
+```kotlin
+
+class CF : CoffeeMachine {
+
+    override fun getHotWater() {
+        print("hot water")
+    }
+
+    override fun makeCoffee() {
+        print("coffee")
+    }
+
+}
+
+```
+
+Brett hates plain coffee, He always wanted to make add a Colombian flavour to the coffee. He came across the
+CoffeeMachine blueprint. He is exceptionally brilliant, so he plans to create a new machine out of the CF.
+
+```kotlin
+
+class BrettCoffeeMachine(private val machine: CoffeeMachine) : CoffeeMachine by machine {
+
+  // Rest of the functionalities remains the same.
+  
+  override fun makeCoffee() {
+    print("add Colombian flavour")
+    machine.makeCoffee()
+  }
+}
+
+```
+
+Now, he has the flavor as well as the old coffee machine functionality. 
+
