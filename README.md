@@ -41,6 +41,7 @@ some super useful links to get the learning materials that I personally recommen
     * [Facade](#Facade)
     * [Decorator](#Decorator)
     * [Composite](#Composite)
+    * [Proxy](#Proxy)
 
 ## Introduction
 
@@ -742,3 +743,63 @@ computer.addComponent(other)
 
 ```
 
+### Proxy
+
+This design pattern comes into play when the program has a dependency with disk storage. Whenever you have such 
+dependencies, fetching the files each time from the Disk is not efficient. Instead, we will provide a middle man who can 
+hold the value temporarily for the course of the runtime(like a proxy). This is very similar to Facade, but the only 
+difference is that, there will be an additional logic added for proxy mechanism.
+
+<p align="center">
+  <img src="https://github.com/iamjosephmj/kotlin-design-patters/blob/main/media/proxy.png" />
+</p>
+
+Let's say, we have an Image structure that can display an Image
+
+```kotlin
+
+interface Image {
+    fun display()
+}
+
+```
+
+
+Function to fetch the image from Disk
+
+```kotlin
+
+class RealImage(private val filename: String): Image {
+    override fun display() {
+        println("RealImage: Displaying $filename")
+    }
+
+    private fun loadFromDisk(filename: String) {
+        println("RealImage: Loading $filename")
+    }
+
+    init {
+        loadFromDisk(filename)
+    }
+}
+
+
+```
+
+Proxy
+
+```kotlin
+
+class ProxyImage(private val filename: String): Image {
+    private var realImage: RealImage? = null
+
+    override fun display() {
+        println("ProxyImage: Displaying $filename")
+        if (realImage == null) {
+            realImage = RealImage(filename)
+        }
+        realImage!!.display()
+    }
+}
+
+```
