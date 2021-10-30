@@ -40,6 +40,7 @@ some super useful links to get the learning materials that I personally recommen
     * [Bridge](#Bridge)
     * [Facade](#Facade)
     * [Decorator](#Decorator)
+    * [Composite](#Composite)
 
 ## Introduction
 
@@ -602,15 +603,142 @@ CoffeeMachine blueprint. He is exceptionally brilliant, so he plans to create a 
 
 class BrettCoffeeMachine(private val machine: CoffeeMachine) : CoffeeMachine by machine {
 
-  // Rest of the functionalities remains the same.
-  
-  override fun makeCoffee() {
-    print("add Colombian flavour")
-    machine.makeCoffee()
-  }
+    // Rest of the functionalities remains the same.
+
+    override fun makeCoffee() {
+        print("add Colombian flavour")
+        machine.makeCoffee()
+    }
 }
 
 ```
 
-Now, he has the flavor as well as the old coffee machine functionality. 
+Now, he has the flavor as well as the old coffee machine functionality.
+
+### Composite
+
+This design pattern is applicable to problem that includes a tree structure where each individual component provides its
+own functionality. So the key idea about choosing this design pattern is that it works when the core functionality can
+be represented as a tree, and we can encapsulate(consider) them as a single entity.
+
+Let's take the example of assembling a PC. Lucia is a friend of mine, She is smart and decides to assemble a Gaming PC.
+She now wants to build a system to simulate the PC such a way that each component can give its own price, and when
+connecting them together they give the total sum that she has to pay.
+
+let's say, The base component (base of all PC component) name Equipment can be considered as
+
+```kotlin
+
+open class Equipment(
+    open val price: Float,
+    val name: String
+)
+
+
+```
+
+Each Equipment can be logically bounded in its Composite class - you can call them as composition.
+
+```kotlin
+
+open class Composite(name: String) : Equipment(0, name) {
+    // To store the equipments
+    private val equipments: ArrayList<Equipment> = arrayListOf()
+
+    // maps each objects and find its sum.
+
+    override val price: Int
+        get() {
+
+            val compositePrice = composites.sumOf { composite ->
+                composite.price
+            }
+
+            return equipments.sumOf { it.price } + compositePrice
+        }
+
+    // adds the equipment to the list. 
+    fun addEquipment(equipment: Equipment) = apply {
+        equipments.add(equipment)
+    }
+
+    fun addComponent(composite: Composite) = apply {
+        composites.add(composite)
+    }
+}
+
+```
+
+She has pretty much all the base classes ready. Now, it is time to select each component of her PC from the nearby
+store.
+
+```kotlin
+
+// PC that she is building.
+
+
+class Computer : Composite("Lucia's PC")
+
+class Cabinet : Composite("GAMING CPU")
+
+class Processor : Equipment(1000, "Lucia's Fav processor")
+
+class Ram : Equipment(200, "Lucia's Fav Ram")
+
+class GraphicsCard : Equipment(2000, "Lucia's Fav GPU")
+
+class OtherCpuComponents : Equipment(1000, "Lucia's selected set of components for CPU")
+
+class Others : Composite("Display and other input devices")
+
+class Monitor : Equipment(700, "Lucia's Fav monitor with 144hz refresh rate")
+
+class Keyboard : Equipment(200, "Lucia's Fav keyboard")
+
+class Mouse : Equipment(200, "Lucia's Fav mouse")
+
+class PopToy : Equipment(10, "Lucia's Fav pop toy to keep near her PC")
+
+```
+
+Finally, this is how she stitches them in the UI.
+
+```kotlin
+//Main composite
+val computer = Computer()
+
+// Sub-composite
+val cabinet = Cabinet()
+val other = Others()
+
+// Equipments
+val processor = Processor()
+val ram = Ram()
+val graphicsCard = GraphicsCard()
+val otherComponent = OtherCpuComponents()
+
+// Equipments
+val monitor = Monitor()
+val keyboard = Keyboard()
+val mouse = Mouse()
+val popToy = PopToy()
+
+// attaching equipments to others
+other.addEquipment(monitor)
+other.addEquipment(keyboard)
+other.addEquipment(mouse)
+other.addEquipment(popToy)
+
+// attaching equipments to others
+cabinet.addEquipment(processor)
+cabinet.addEquipment(ram)
+cabinet.addEquipment(graphicsCard)
+cabinet.addEquipment(otherComponent)
+
+
+// attaching sub-components to main component.
+computer.addComponent(cabinet)
+computer.addComponent(other)
+
+```
 
