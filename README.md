@@ -40,6 +40,8 @@ some super useful links to get the learning materials that I personally recommen
     * [Bridge](#Bridge)
     * [Facade](#Facade)
     * [Decorator](#Decorator)
+* [Behavioral-Patterns](#Behavioral-Patterns)
+    * [Observer](#Observer)
 
 ## Introduction
 
@@ -602,15 +604,126 @@ CoffeeMachine blueprint. He is exceptionally brilliant, so he plans to create a 
 
 class BrettCoffeeMachine(private val machine: CoffeeMachine) : CoffeeMachine by machine {
 
-  // Rest of the functionalities remains the same.
-  
-  override fun makeCoffee() {
-    print("add Colombian flavour")
-    machine.makeCoffee()
+    // Rest of the functionalities remains the same.
+
+    override fun makeCoffee() {
+        print("add Colombian flavour")
+        machine.makeCoffee()
+    }
+}
+
+```
+
+Now, he has the flavor as well as the old coffee machine functionality.
+
+## Behavioral-Patterns
+
+### Observer
+
+The observer is quite a common patterns, it allows us to notify a set of subscribers a certain even that have occurred.
+So, basically at it core this design pattern describes a subscription mechanism. So, in real life, you can think of it
+when you subscribe for a magazine/youtube channel. Everytime something is published to that service, the user gets a
+notification. So that is the same idea here. Observer pattern allows the object to be an observer of a service. This
+allows us to notify multiple objects simultaneously, and in a broader view, this pattern showcases one-many
+relationship.
+
+<p align="center">
+  <img src="https://github.com/iamjosephmj/kotlin-design-patters/blob/main/media/observer.png" />
+</p>
+
+This is the general diagram of the observer pattern. Like the other patterns, Observer also work on top of interfaces.
+The event-manager has two functionalities. Store the references of the subscribers, and notify the subscribers. Event
+generator will make the event manager to push the events to the subscribers.
+
+Let's consider a typical push notification service for the code example:
+
+Basic push event
+
+```kotlin
+
+// Logs the name of the event
+data class PushEvent(val eventName: String)
+
+```
+
+Event manager
+
+```kotlin
+
+class EventManager(vararg operations: String) {
+    // Storage
+    var listeners = hashMapOf<String, ArrayList<EventListener>>()
+
+    init {
+        for (operation in operations) {
+            listeners[operation] = ArrayList()
+        }
+    }
+
+    // Subscription.
+    fun subscribe(eventType: String, listener: EventListener) {
+        val users = listeners[eventType]
+        users?.add(listener)
+    }
+
+    // removal of subscription.
+    fun unsubscribe(eventType: String, listener: EventListener) {
+        val users = listeners[eventType]
+        users?.remove(listener)
+    }
+
+    // Pushing events to subscribers.
+    fun notify(eventType: String, file: PushEvent) {
+        val users = listeners[eventType]
+        users?.let {
+            for (listener in it) {
+                listener.update(eventType, file)
+            }
+        }
+    }
+}
+
+```
+
+Event generator
+
+```kotlin
+
+class EventGenerator {
+  var events = EventManager("a", "b")
+    private set
+
+  private lateinit var pushEvent: PushEvent
+
+  fun generateEventA(filePath: String) {
+    pushEvent = PushEvent(filePath)
+    events.notify("a", pushEvent)
+  }
+
+  fun generateEventB() {
+    pushEvent.let {
+      events.notify("b", pushEvent)
+    }
   }
 }
 
 ```
 
-Now, he has the flavor as well as the old coffee machine functionality. 
+Simple notifications services
 
+```kotlin
+// sending event via email
+class EmailNotificationListener(private val email: String) : EventListener {
+    override fun update(eventType: String, pushEvent: PushEvent) {
+        println("Email to $email: Someone has performed $eventType operation.")
+    }
+}
+
+// Logging event to file 
+class LogOpenListener(var filename: String) : EventListener {
+    override fun update(eventType: String, pushEvent: PushEvent) {
+        println("Save to log $filename: Someone has performed $eventType operation.")
+    }
+}
+
+```
