@@ -46,6 +46,7 @@ some super useful links to get the learning materials that I personally recommen
     * [Observer](#Observer)
     * [Chain-of-Responsibility](#Chain-of-Responsibility)
     * [Command](#Command)
+    * [Strategy](#Strategy)
 
 ## Introduction
 
@@ -749,9 +750,9 @@ computer.addComponent(other)
 
 ### Proxy
 
-This design pattern comes into play when the program has a dependency with disk storage. Whenever you have such 
-dependencies, fetching the files each time from the Disk is not efficient. Instead, we will provide a middle man who can 
-hold the value temporarily for the course of the runtime(like a proxy). This is very similar to Facade, but the only 
+This design pattern comes into play when the program has a dependency with disk storage. Whenever you have such
+dependencies, fetching the files each time from the Disk is not efficient. Instead, we will provide a middle man who can
+hold the value temporarily for the course of the runtime(like a proxy). This is very similar to Facade, but the only
 difference is that, there will be an additional logic added for proxy mechanism.
 
 <p align="center">
@@ -768,12 +769,11 @@ interface Image {
 
 ```
 
-
 Function to fetch the image from Disk
 
 ```kotlin
 
-class RealImage(private val filename: String): Image {
+class RealImage(private val filename: String) : Image {
     override fun display() {
         println("RealImage: Displaying $filename")
     }
@@ -794,7 +794,7 @@ Proxy
 
 ```kotlin
 
-class ProxyImage(private val filename: String): Image {
+class ProxyImage(private val filename: String) : Image {
     private var realImage: RealImage? = null
 
     override fun display() {
@@ -807,7 +807,6 @@ class ProxyImage(private val filename: String): Image {
 }
 
 ```
-
 
 ## Behavioral-Patterns
 
@@ -883,21 +882,21 @@ Event generator
 ```kotlin
 
 class EventGenerator {
-  var events = EventManager("a", "b")
-    private set
+    var events = EventManager("a", "b")
+        private set
 
-  private lateinit var pushEvent: PushEvent
+    private lateinit var pushEvent: PushEvent
 
-  fun generateEventA(filePath: String) {
-    pushEvent = PushEvent(filePath)
-    events.notify("a", pushEvent)
-  }
-
-  fun generateEventB() {
-    pushEvent.let {
-      events.notify("b", pushEvent)
+    fun generateEventA(filePath: String) {
+        pushEvent = PushEvent(filePath)
+        events.notify("a", pushEvent)
     }
-  }
+
+    fun generateEventB() {
+        pushEvent.let {
+            events.notify("b", pushEvent)
+        }
+    }
 }
 
 ```
@@ -923,26 +922,26 @@ class LogOpenListener(var filename: String) : EventListener {
 
 ### Chain-of-Responsibility
 
-Basically this pattern implies that there are a chain of so-called `Handlers` (Something that can handle requests in 
-some way). This is very much useful when you want to solve a problem that has to process certain requests in n-number 
-of steps to produce the result.
+Basically this pattern implies that there are a chain of so-called `Handlers` (Something that can handle requests in
+some way). This is very much useful when you want to solve a problem that has to process certain requests in n-number of
+steps to produce the result.
 
-- `Handles` has the authority to pass-on a request without processing them. 
-- You don't need to start form the first `Handler` in the chain, instead, you can start from any of the `Handlers` 
-in the chain.
+- `Handles` has the authority to pass-on a request without processing them.
+- You don't need to start form the first `Handler` in the chain, instead, you can start from any of the `Handlers`
+  in the chain.
 - `Handlers` has the potential to break the chain and return a specific result.
 
-Let's see an example in android where we apply this design pattern. 
+Let's see an example in android where we apply this design pattern.
 
-Request header creation is a common thing that developers does, let's take that as a typical example for projecting 
-the use of this behavioural pattern.
+Request header creation is a common thing that developers does, let's take that as a typical example for projecting the
+use of this behavioural pattern.
 
-Basic structure of the handler chain 
+Basic structure of the handler chain
 
 ```kotlin
 
 interface HandlerChain {
-  fun addHeader(inputHeader: String): String
+    fun addHeader(inputHeader: String): String
 }
 
 ```
@@ -952,21 +951,21 @@ Implementations of Handler chain:
 ```kotlin
 
 // Auth Header
-class AuthenticationHeader(val token: String?, var next: HandlerChain? = null): HandlerChain {
+class AuthenticationHeader(val token: String?, var next: HandlerChain? = null) : HandlerChain {
     override fun addHeader(inputHeader: String) =
         "$inputHeader\nAuthorization: $token"
             .let { next?.addHeader(it) ?: it }
 }
 
 // Content type header
-class ContentTypeHeader(val contentType: String, var next: HandlerChain? = null): HandlerChain {
+class ContentTypeHeader(val contentType: String, var next: HandlerChain? = null) : HandlerChain {
     override fun addHeader(inputHeader: String) =
         "$inputHeader\nContentType: $contentType"
             .let { next?.addHeader(it) ?: it }
 }
 
 // Payload header 
-class BodyPayloadHeader(val body: String, var next: HandlerChain? = null): HandlerChain {
+class BodyPayloadHeader(val body: String, var next: HandlerChain? = null) : HandlerChain {
     override fun addHeader(inputHeader: String) =
         "$inputHeader\n$body"
             .let { next?.addHeader(it) ?: it }
@@ -978,26 +977,26 @@ Creating chain-of-responsibility
 
 ```kotlin
 
- val authenticationHeader = AuthenticationHeader("token")
-        val contentTypeHeader = ContentTypeHeader("application/json")
-        val bodyPayloadHeader = BodyPayloadHeader("Body: {\"username\" = \"joseph\"}")
+val authenticationHeader = AuthenticationHeader("token")
+val contentTypeHeader = ContentTypeHeader("application/json")
+val bodyPayloadHeader = BodyPayloadHeader("Body: {\"username\" = \"joseph\"}")
 
-        authenticationHeader.next = contentTypeHeader
-        contentTypeHeader.next = bodyPayloadHeader
+authenticationHeader.next = contentTypeHeader
+contentTypeHeader.next = bodyPayloadHeader
 
-        val messageWithAuthentication = authenticationHeader.addHeader("Headers with authentication")
+val messageWithAuthentication = authenticationHeader.addHeader("Headers with authentication")
 
-        val messageWithoutAuthentication = contentTypeHeader.addHeader("Headers without authentication")
+val messageWithoutAuthentication = contentTypeHeader.addHeader("Headers without authentication")
 
 ```
 
 ### Command
 
-Command is a behavioral design pattern that turns a request into a stand-alone object that contains all information 
-about the request. This transformation lets you pass requests as a method arguments, delay or queue a request’s 
+Command is a behavioral design pattern that turns a request into a stand-alone object that contains all information
+about the request. This transformation lets you pass requests as a method arguments, delay or queue a request’s
 execution, and support undoable operations.
 
-In Android, Event-Bus library is a typical example of command pattern. 
+In Android, Event-Bus library is a typical example of command pattern.
 
 Let's consider a simple Add-to-cart / checkout scenario.
 
@@ -1050,11 +1049,52 @@ Example for firing commands
 
 ```kotlin
 
- CommandProcessor()
-                .addToQueue(OrderAddCommand(1L))
-                .addToQueue(OrderAddCommand(2L))
-                .addToQueue(OrderCheckoutCommand(2L))
-                .addToQueue(OrderCheckoutCommand(1L))
-                .processCommands()
+CommandProcessor()
+    .addToQueue(OrderAddCommand(1L))
+    .addToQueue(OrderAddCommand(2L))
+    .addToQueue(OrderCheckoutCommand(2L))
+    .addToQueue(OrderCheckoutCommand(1L))
+    .processCommands()
+
+```
+
+### Strategy
+
+Strategy is a behavioral design pattern that lets you define a family of algorithms, put each of them into a separate
+class, and make their objects interchangeable.
+
+Let's consider a simple scenario of printing a certain string in different format:
+
+```kotlin
+
+class Printer(private val stringFormatterStrategy: (String) -> String) {
+    fun printString(message: String) {
+        println(stringFormatterStrategy(message))
+    }
+}
+
+```
+
+Now, if you closely take a look at this printer class, you can see that there is a generic strategy (constructor) with
+which you can print a given string. Now, Let's formulate our strategies
+
+```kotlin
+
+val lowercaseFormatter = { it: String -> it.toLowerCase() }
+val uppercaseFormatter = { it: String -> it.toUpperCase() }
+
+```
+
+Testing our strategy
+
+```kotlin
+
+val inputString = "Test for strategy pattern"
+
+val lowercasePrinter = Printer(lowercaseFormatter)
+lowercasePrinter.printString(inputString)
+
+val uppercasePrinter = Printer(uppercaseFormatter)
+uppercasePrinter.printString(inputString)
 
 ```
