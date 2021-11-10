@@ -45,6 +45,7 @@ some super useful links to get the learning materials that I personally recommen
 * [Behavioral-Patterns](#Behavioral-Patterns)
     * [Observer](#Observer)
     * [Chain-of-Responsibility](#Chain-of-Responsibility)
+    * [Command](#Command)
 
 ## Introduction
 
@@ -987,5 +988,73 @@ Creating chain-of-responsibility
         val messageWithAuthentication = authenticationHeader.addHeader("Headers with authentication")
 
         val messageWithoutAuthentication = contentTypeHeader.addHeader("Headers without authentication")
+
+```
+
+### Command Pattern
+
+Command is a behavioral design pattern that turns a request into a stand-alone object that contains all information 
+about the request. This transformation lets you pass requests as a method arguments, delay or queue a request’s 
+execution, and support undoable operations.
+
+In Android, Event-Bus library is a typical example of command pattern. 
+
+Let's consider a simple Add-to-cart / checkout scenario.
+
+Let's have a unified interface for command.
+
+```kotlin
+
+interface Command {
+    fun execute()
+}
+
+```
+
+Add to cart and checkout commands
+
+```kotlin
+
+class OrderAddCommand(val id: Long) : Command {
+    override fun execute() {
+        println("Adding order with id $id")
+    }
+}
+
+class OrderCheckoutCommand(val id: Long) : Command {
+    override fun execute() {
+        println("Paying for order with id $id")
+    }
+}
+
+```
+
+Class that processes the command
+
+```kotlin
+
+class CommandProcessor {
+    private val queue = arrayListOf<Command>()
+
+    fun addToQueue(command: Command): CommandProcessor = apply { queue.add(command) }
+
+    fun processCommands(): CommandProcessor = apply {
+        queue.forEach { it.execute() }
+        queue.clear()
+    }
+}
+
+```
+
+Example for firing commands
+
+```kotlin
+
+ CommandProcessor()
+                .addToQueue(OrderAddCommand(1L))
+                .addToQueue(OrderAddCommand(2L))
+                .addToQueue(OrderCheckoutCommand(2L))
+                .addToQueue(OrderCheckoutCommand(1L))
+                .processCommands()
 
 ```
