@@ -44,6 +44,7 @@ some super useful links to get the learning materials that I personally recommen
     * [Proxy](#Proxy)
 * [Behavioral-Patterns](#Behavioral-Patterns)
     * [Observer](#Observer)
+    * [Chain-of-Responsibility](#Chain-of-Responsibility)
 
 ## Introduction
 
@@ -916,5 +917,75 @@ class LogOpenListener(var filename: String) : EventListener {
         println("Save to log $filename: Someone has performed $eventType operation.")
     }
 }
+
+```
+
+### Chain-of-Responsibility
+
+Basically this pattern implies that there are a chain of so-called `Handlers` (Something that can handle requests in 
+some way). This is very much useful when you want to solve a problem that has to process certain requests in n-number 
+of steps to produce the result.
+
+- `Handles` has the authority to pass-on a request without processing them. 
+- You don't need to start form the first `Handler` in the chain, instead, you can start from any of the `Handlers` 
+in the chain.
+- `Handlers` has the potential to break the chain and return a specific result.
+
+Let's see an example in android where we apply this design pattern. 
+
+Request header creation is a common thing that developers does, let's take that as a typical example for projecting 
+the use of this behavioural pattern.
+
+Basic structure of the handler chain 
+
+```kotlin
+
+interface HandlerChain {
+  fun addHeader(inputHeader: String): String
+}
+
+```
+
+Implementations of Handler chain:
+
+```kotlin
+
+// Auth Header
+class AuthenticationHeader(val token: String?, var next: HandlerChain? = null): HandlerChain {
+    override fun addHeader(inputHeader: String) =
+        "$inputHeader\nAuthorization: $token"
+            .let { next?.addHeader(it) ?: it }
+}
+
+// Content type header
+class ContentTypeHeader(val contentType: String, var next: HandlerChain? = null): HandlerChain {
+    override fun addHeader(inputHeader: String) =
+        "$inputHeader\nContentType: $contentType"
+            .let { next?.addHeader(it) ?: it }
+}
+
+// Payload header 
+class BodyPayloadHeader(val body: String, var next: HandlerChain? = null): HandlerChain {
+    override fun addHeader(inputHeader: String) =
+        "$inputHeader\n$body"
+            .let { next?.addHeader(it) ?: it }
+}
+
+```
+
+Creating chain-of-responsibility
+
+```kotlin
+
+ val authenticationHeader = AuthenticationHeader("token")
+        val contentTypeHeader = ContentTypeHeader("application/json")
+        val bodyPayloadHeader = BodyPayloadHeader("Body: {\"username\" = \"joseph\"}")
+
+        authenticationHeader.next = contentTypeHeader
+        contentTypeHeader.next = bodyPayloadHeader
+
+        val messageWithAuthentication = authenticationHeader.addHeader("Headers with authentication")
+
+        val messageWithoutAuthentication = contentTypeHeader.addHeader("Headers without authentication")
 
 ```
