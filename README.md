@@ -2,7 +2,7 @@
   <img src="https://github.com/iamjosephmj/kotlin-design-patters/blob/main/media/structures.jpg" />
 </p>
 
-# What Are Design Patterns
+# What Are Design Patterns ?
 
 Design patterns are a way to solve similar problems in a similar ways. So, basically we are not trying to re-invent the
 wheel when we are building an application or a piece of code. What we want is to be able to solve certain problems in a
