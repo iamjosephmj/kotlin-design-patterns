@@ -48,6 +48,7 @@ some super useful links to get the learning materials that I personally recommen
     * [Command](#Command)
     * [Strategy](#Strategy)
     * [State](#State)
+    * [Visitor](#Visitor)
 
 ## Introduction
 
@@ -1146,3 +1147,133 @@ class AuthorizationPresenter {
 
 ```
 
+### Visitor
+
+Visitor is a behavioral design pattern that lets you separate algorithms from the objects on which they operate.
+
+Let's consider a typical example of an `Ice-Cream` store.
+
+A store delivers a certain flavour of Ice-Cream `<R>` in 3 different scoop types to a store visitor `StoreVisitor<R>`,
+i.e. a visitor that likes `StoreVisitor` who likes `<R>` flavour of the ice-cream.
+
+
+Scoop types
+
+```kotlin
+
+sealed class Scoop {
+    object Small : Scoop()
+    object Medium : Scoop()
+    object Large : Scoop()
+}
+
+```
+
+Store interface
+
+```kotlin
+
+interface Store {
+  fun <R> deliver(visitor: StoreVisitor<R>): R
+}
+
+```
+
+Different flavours of ice-cream
+
+```kotlin
+
+data class VanillaIceCream(val scoopType: Scoop) : Store {
+  override fun <R> deliver(visitor: StoreVisitor<R>): R = visitor.visit()
+}
+
+data class BlueBerryIceCream(val scoopType: Scoop) : Store {
+  override fun <R> deliver(visitor: StoreVisitor<R>): R = visitor.visit()
+}
+
+data class SpanishDelightIceCream(val scoopType: Scoop) : Store {
+  override fun <R> deliver(visitor: StoreVisitor<R>): R = visitor.visit()
+}
+
+```
+
+Store Visitor example
+
+```kotlin
+
+interface StoreVisitor<out R> {
+  fun visit(): R
+}
+
+```
+
+Implementation of a store visitors
+
+```kotlin
+
+// VanillaIceCream lover
+class StoreVisitorA(private val contract: Long) : StoreVisitor<VanillaIceCream> {
+  override fun visit(): VanillaIceCream {
+    return when (contract) {
+      in 1..5 -> {
+        VanillaIceCream(Scoop.Small)
+      }
+      in 5..10 -> {
+        VanillaIceCream(Scoop.Medium)
+      }
+      else -> {
+        VanillaIceCream(Scoop.Large)
+      }
+    }
+  }
+}
+
+// BlueBerryIceCream lover
+class StoreVisitorB(private val contract: Long) : StoreVisitor<BlueBerryIceCream> {
+  override fun visit(): BlueBerryIceCream {
+    return when (contract) {
+      in 1..7 -> {
+        BlueBerryIceCream(Scoop.Small)
+      }
+      in 7..20 -> {
+        BlueBerryIceCream(Scoop.Medium)
+      }
+      else -> {
+        BlueBerryIceCream(Scoop.Large)
+      }
+    }
+  }
+}
+
+// SpanishDelightIceCream lover
+class StoreVisitorC(private val contract: Long) : StoreVisitor<SpanishDelightIceCream> {
+  override fun visit(): SpanishDelightIceCream {
+    return when (contract) {
+      in 1..2 -> {
+        SpanishDelightIceCream(Scoop.Small)
+      }
+      in 2..7 -> {
+        SpanishDelightIceCream(Scoop.Medium)
+      }
+      else -> {
+        SpanishDelightIceCream(Scoop.Large)
+      }
+    }
+  }
+}
+
+```
+
+let's see how the store works for the three customers
+
+```kotlin
+
+        val visitorA = StoreVisitorA(5)
+        val visitorB = StoreVisitorB(8)
+        val visitorC = StoreVisitorC(10)
+
+        assert(visitorA.visit().scoopType == Scoop.Small)
+        assert(visitorB.visit().scoopType == Scoop.Medium)
+        assert(visitorC.visit().scoopType == Scoop.Large)
+
+```
