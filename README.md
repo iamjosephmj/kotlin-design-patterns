@@ -49,6 +49,7 @@ some super useful links to get the learning materials that I personally recommen
     * [Strategy](#Strategy)
     * [State](#State)
     * [Visitor](#Visitor)
+    * [Mediator](#Mediator)
 
 ## Introduction
 
@@ -1103,16 +1104,17 @@ uppercasePrinter.printString(inputString)
 
 ### State
 
-State is a behavioral design pattern that lets an object alter its behavior when its internal state changes. 
-It appears as if the object changed its class.
+State is a behavioral design pattern that lets an object alter its behavior when its internal state changes. It appears
+as if the object changed its class.
 
-You can think of an `ACCESS-TOKEN` store in android as a simple example. The store works in two states, It will deliver 
-an access token in when the login is completed, else it will return a state Not-Authorized-Exception. 
+You can think of an `ACCESS-TOKEN` store in android as a simple example. The store works in two states, It will deliver
+an access token in when the login is completed, else it will return a state Not-Authorized-Exception.
 
-If you take a closer look at this scenario, The Characteristics of the Store is actually controlled by state of the 
-module. 
+If you take a closer look at this scenario, The Characteristics of the Store is actually controlled by state of the
+module.
 
 Defining States
+
 ```kotlin
 
 sealed class AuthorizationState
@@ -1156,7 +1158,6 @@ Let's consider a typical example of an `Ice-Cream` store.
 A store delivers a certain flavour of Ice-Cream `<R>` in 3 different scoop types to a store visitor `StoreVisitor<R>`,
 i.e. a visitor that likes `StoreVisitor` who likes `<R>` flavour of the ice-cream.
 
-
 Scoop types
 
 ```kotlin
@@ -1174,7 +1175,7 @@ Store interface
 ```kotlin
 
 interface Store {
-  fun <R> deliver(visitor: StoreVisitor<R>): R
+    fun <R> deliver(visitor: StoreVisitor<R>): R
 }
 
 ```
@@ -1184,15 +1185,15 @@ Different flavours of ice-cream
 ```kotlin
 
 data class VanillaIceCream(val scoopType: Scoop) : Store {
-  override fun <R> deliver(visitor: StoreVisitor<R>): R = visitor.visit()
+    override fun <R> deliver(visitor: StoreVisitor<R>): R = visitor.visit()
 }
 
 data class BlueBerryIceCream(val scoopType: Scoop) : Store {
-  override fun <R> deliver(visitor: StoreVisitor<R>): R = visitor.visit()
+    override fun <R> deliver(visitor: StoreVisitor<R>): R = visitor.visit()
 }
 
 data class SpanishDelightIceCream(val scoopType: Scoop) : Store {
-  override fun <R> deliver(visitor: StoreVisitor<R>): R = visitor.visit()
+    override fun <R> deliver(visitor: StoreVisitor<R>): R = visitor.visit()
 }
 
 ```
@@ -1202,7 +1203,7 @@ Store Visitor example
 ```kotlin
 
 interface StoreVisitor<out R> {
-  fun visit(): R
+    fun visit(): R
 }
 
 ```
@@ -1213,53 +1214,53 @@ Implementation of a store visitors
 
 // VanillaIceCream lover
 class StoreVisitorA(private val contract: Long) : StoreVisitor<VanillaIceCream> {
-  override fun visit(): VanillaIceCream {
-    return when (contract) {
-      in 1..5 -> {
-        VanillaIceCream(Scoop.Small)
-      }
-      in 5..10 -> {
-        VanillaIceCream(Scoop.Medium)
-      }
-      else -> {
-        VanillaIceCream(Scoop.Large)
-      }
+    override fun visit(): VanillaIceCream {
+        return when (contract) {
+            in 1..5 -> {
+                VanillaIceCream(Scoop.Small)
+            }
+            in 5..10 -> {
+                VanillaIceCream(Scoop.Medium)
+            }
+            else -> {
+                VanillaIceCream(Scoop.Large)
+            }
+        }
     }
-  }
 }
 
 // BlueBerryIceCream lover
 class StoreVisitorB(private val contract: Long) : StoreVisitor<BlueBerryIceCream> {
-  override fun visit(): BlueBerryIceCream {
-    return when (contract) {
-      in 1..7 -> {
-        BlueBerryIceCream(Scoop.Small)
-      }
-      in 7..20 -> {
-        BlueBerryIceCream(Scoop.Medium)
-      }
-      else -> {
-        BlueBerryIceCream(Scoop.Large)
-      }
+    override fun visit(): BlueBerryIceCream {
+        return when (contract) {
+            in 1..7 -> {
+                BlueBerryIceCream(Scoop.Small)
+            }
+            in 7..20 -> {
+                BlueBerryIceCream(Scoop.Medium)
+            }
+            else -> {
+                BlueBerryIceCream(Scoop.Large)
+            }
+        }
     }
-  }
 }
 
 // SpanishDelightIceCream lover
 class StoreVisitorC(private val contract: Long) : StoreVisitor<SpanishDelightIceCream> {
-  override fun visit(): SpanishDelightIceCream {
-    return when (contract) {
-      in 1..2 -> {
-        SpanishDelightIceCream(Scoop.Small)
-      }
-      in 2..7 -> {
-        SpanishDelightIceCream(Scoop.Medium)
-      }
-      else -> {
-        SpanishDelightIceCream(Scoop.Large)
-      }
+    override fun visit(): SpanishDelightIceCream {
+        return when (contract) {
+            in 1..2 -> {
+                SpanishDelightIceCream(Scoop.Small)
+            }
+            in 2..7 -> {
+                SpanishDelightIceCream(Scoop.Medium)
+            }
+            else -> {
+                SpanishDelightIceCream(Scoop.Large)
+            }
+        }
     }
-  }
 }
 
 ```
@@ -1268,12 +1269,74 @@ let's see how the store works for the three customers
 
 ```kotlin
 
-        val visitorA = StoreVisitorA(5)
-        val visitorB = StoreVisitorB(8)
-        val visitorC = StoreVisitorC(10)
+val visitorA = StoreVisitorA(5)
+val visitorB = StoreVisitorB(8)
+val visitorC = StoreVisitorC(10)
 
-        assert(visitorA.visit().scoopType == Scoop.Small)
-        assert(visitorB.visit().scoopType == Scoop.Medium)
-        assert(visitorC.visit().scoopType == Scoop.Large)
+assert(visitorA.visit().scoopType == Scoop.Small)
+assert(visitorB.visit().scoopType == Scoop.Medium)
+assert(visitorC.visit().scoopType == Scoop.Large)
 
 ```
+
+### Mediator
+
+Mediator is a behavioral design pattern that lets you reduce chaotic dependencies between objects. The pattern restricts
+direct communications between the objects and forces them to collaborate only via a mediator object. In simple terms,
+you can think of the mediator pattern as a middle man for facilitating the communication between objects.
+
+Let's take an example of a chat system, where in a multiple clients communicates to each other.
+
+This is a typical structure of the user
+
+```kotlin
+
+class ChatUser(private val mediator: Mediator, private val name: String) {
+    fun send(msg: String) {
+        println("$name: Sending message: $msg")
+        mediator.sendMessage(msg, this)
+    }
+
+    fun receive(msg: String) {
+        println("$name: Received message: $msg")
+    }
+}
+
+```
+
+This is how the mediator looks like(Mediator helps in delivering a msg to multiple Chat users)
+
+```kotlin
+
+class Mediator {
+    private val users = arrayListOf<ChatUser>()
+
+    fun sendMessage(msg: String, user: ChatUser) {
+        users
+            .filter { it != user }
+            .forEach { it.receive(msg) }
+    }
+
+    fun addUser(user: ChatUser): Mediator = apply { users.add(user) }
+}
+
+
+```
+
+communication example:
+
+```kotlin
+
+val mediator = Mediator()
+val shinaz = ChatUser(mediator, "shinaz")
+val sethu = ChatUser(mediator, "sethu")
+val nikhil = ChatUser(mediator, "nikhil")
+
+mediator.addUser(shinaz)
+    .addUser(sethu)
+    .addUser(nikhil)
+
+nikhil.send("Hi everyone!")
+
+```
+
