@@ -50,6 +50,7 @@ some super useful links to get the learning materials that I personally recommen
     * [State](#State)
     * [Visitor](#Visitor)
     * [Mediator](#Mediator)
+    * [Memento](#Memento)
 
 ## Introduction
 
@@ -82,10 +83,6 @@ instance on demand is quite an overhead. So, we basically need only "One" instan
 instance idea here is pretty memory efficient. Because we don't need an additional space in the memory heap. In other
 words this design pattern lets you ensure that a class has only one instance, while providing a global access point to
 this instance.
-
-<p align="center">
-  <img src="https://github.com/iamjosephmj/kotlin-design-patters/blob/main/media/singleton.png" />
-</p>
 
 Kotlin gives you out of the box support for the singleton implementation using the keyword **object**
 
@@ -1339,4 +1336,60 @@ mediator.addUser(shinaz)
 nikhil.send("Hi everyone!")
 
 ```
+
+### Memento
+
+Memento is a behavioral design pattern that lets you save and restore the previous state of an object without revealing
+the details of its implementation.
+
+`Text Editor` applications are the most common examples of this design pattern, you might be wondering where exactly in
+a `Text Editor` is this DP applicable ->>>>`Undo button`<<<<-
+
+There are 3 components for this patterns:
+
+- Memento : Storage
+- Originator : Creates a state, you may think of this as an object factory in some cases.
+- Decision Maker (Care Taker): Decides to save or restore the states.
+
+Now, lets focus on the `Text Editor` implementation.
+
+```kotlin
+
+data class Memento(val state: String)
+
+```
+
+Originator:
+
+```kotlin
+
+class Originator(var state: String) {
+    fun createMemento() = Memento(state)
+    fun restoreMemento(memento: Memento) {
+        state = memento.state
+    }
+}
+
+```
+
+Decision Maker
+
+```kotlin
+
+class CareTaker {
+    // Memento Store
+    private val mementoList = arrayListOf<Memento>()
+
+    // Saving a state adds the memento to the store.
+    fun saveState(state: Memento) {
+        mementoList.add(state)
+    }
+
+    // returns a memento by index from the store.
+    fun restore(index: Int): Memento = mementoList[index]
+}
+
+```
+
+
 
