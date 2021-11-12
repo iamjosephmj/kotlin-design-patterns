@@ -437,6 +437,11 @@ class Adapter : TargetAdapteeConverter {
 
 ```
 
+refer to
+[Adapter](https://github.com/iamjosephmj/kotlin-design-patterns/blob/main/src/main/kotlin/Adapter.kt)
+[AdapterTest](https://github.com/iamjosephmj/kotlin-design-patterns/blob/main/src/test/kotlin/AdapterTest.kt)
+for more insights.
+
 ### Bridge
 
 Let's now look into a hypothetical example.
@@ -558,6 +563,11 @@ class Repository(private val database: Database) {
 
 ```
 
+refer to
+[Facade](https://github.com/iamjosephmj/kotlin-design-patterns/blob/main/src/main/kotlin/Facade.kt)
+[FacadeTest](https://github.com/iamjosephmj/kotlin-design-patterns/blob/main/src/test/kotlin/FacadeTest.kt)
+for more insights.
+
 ### Decorator
 
 This pattern is also called wrapper pattern. The basic idea about this design pattern is that you are going to attach a
@@ -620,6 +630,11 @@ class BrettCoffeeMachine(private val machine: CoffeeMachine) : CoffeeMachine by 
 ```
 
 Now, he has the flavor as well as the old coffee machine functionality.
+
+refer to
+[Decorator](https://github.com/iamjosephmj/kotlin-design-patterns/blob/main/src/main/kotlin/Decorator.kt)
+[DecoratorTest](https://github.com/iamjosephmj/kotlin-design-patterns/blob/main/src/test/kotlin/DecoratorTest.kt)
+for more insights.
 
 ### Composite
 
@@ -748,6 +763,11 @@ computer.addComponent(other)
 
 ```
 
+refer to
+[Composite](https://github.com/iamjosephmj/kotlin-design-patterns/blob/main/src/main/kotlin/Composite.kt)
+[CompositeTest](https://github.com/iamjosephmj/kotlin-design-patterns/blob/main/src/test/kotlin/CompositeTest.kt)
+for more insights.
+
 ### Proxy
 
 This design pattern comes into play when the program has a dependency with disk storage. Whenever you have such
@@ -807,6 +827,11 @@ class ProxyImage(private val filename: String) : Image {
 }
 
 ```
+
+refer to
+[Proxy](https://github.com/iamjosephmj/kotlin-design-patterns/blob/main/src/main/kotlin/Proxy.kt)
+[ProxyTest](https://github.com/iamjosephmj/kotlin-design-patterns/blob/main/src/test/kotlin/ProxyTest.kt)
+for more insights.
 
 ## Behavioral-Patterns
 
@@ -920,6 +945,11 @@ class LogOpenListener(var filename: String) : EventListener {
 
 ```
 
+refer to
+[Observer](https://github.com/iamjosephmj/kotlin-design-patterns/blob/main/src/main/kotlin/Observer.kt)
+[ObserverTest](https://github.com/iamjosephmj/kotlin-design-patterns/blob/main/src/test/kotlin/ObserverTest.kt)
+for more insights.
+
 ### Chain-of-Responsibility
 
 Basically this pattern implies that there are a chain of so-called `Handlers` (Something that can handle requests in
@@ -972,6 +1002,11 @@ class BodyPayloadHeader(val body: String, var next: HandlerChain? = null) : Hand
 }
 
 ```
+
+refer to
+[ChainOfResponsibilities](https://github.com/iamjosephmj/kotlin-design-patterns/blob/main/src/main/kotlin/ChainOfResponsibilities.kt)
+[ChainOfResponsibilitiesTest](https://github.com/iamjosephmj/kotlin-design-patterns/blob/main/src/test/kotlin/ChainOfResponsibilitiesTest.kt)
+for more insights.
 
 Creating chain-of-responsibility
 
@@ -1058,6 +1093,11 @@ CommandProcessor()
 
 ```
 
+refer to
+[Command](https://github.com/iamjosephmj/kotlin-design-patterns/blob/main/src/main/kotlin/Command.kt)
+[CommandTest](https://github.com/iamjosephmj/kotlin-design-patterns/blob/main/src/test/kotlin/CommandTest.kt)
+for more insights.
+
 ### Strategy
 
 Strategy is a behavioral design pattern that lets you define a family of algorithms, put each of them into a separate
@@ -1098,6 +1138,11 @@ val uppercasePrinter = Printer(uppercaseFormatter)
 uppercasePrinter.printString(inputString)
 
 ```
+
+refer to
+[Strategy](https://github.com/iamjosephmj/kotlin-design-patterns/blob/main/src/main/kotlin/Strategy.kt)
+[StrategyTest](https://github.com/iamjosephmj/kotlin-design-patterns/blob/main/src/test/kotlin/StrategyTest.kt)
+for more insights.
 
 ### State
 
@@ -1145,6 +1190,11 @@ class AuthorizationPresenter {
 }
 
 ```
+
+refer to
+[State](https://github.com/iamjosephmj/kotlin-design-patterns/blob/main/src/main/kotlin/State.kt)
+[StateTest](https://github.com/iamjosephmj/kotlin-design-patterns/blob/main/src/test/kotlin/StateTest.kt)
+for more insights.
 
 ### Visitor
 
@@ -1276,6 +1326,11 @@ assert(visitorC.visit().scoopType == Scoop.Large)
 
 ```
 
+refer to
+[Visitor](https://github.com/iamjosephmj/kotlin-design-patterns/blob/main/src/main/kotlin/Visitor.kt)
+[VisitorTest](https://github.com/iamjosephmj/kotlin-design-patterns/blob/main/src/test/kotlin/VisitorTest.kt)
+for more insights.
+
 ### Mediator
 
 Mediator is a behavioral design pattern that lets you reduce chaotic dependencies between objects. The pattern restricts
@@ -1337,6 +1392,11 @@ nikhil.send("Hi everyone!")
 
 ```
 
+refer to
+[Mediator](https://github.com/iamjosephmj/kotlin-design-patterns/blob/main/src/main/kotlin/Mediator.kt)
+[MediatorTest](https://github.com/iamjosephmj/kotlin-design-patterns/blob/main/src/test/kotlin/MediatorTest.kt)
+for more insights.
+
 ### Memento
 
 Memento is a behavioral design pattern that lets you save and restore the previous state of an object without revealing
@@ -1390,6 +1450,36 @@ class CareTaker {
 }
 
 ```
+
+State restoring.
+
+```kotlin
+
+val originator = Originator("state 0")
+val careTaker = CareTaker()
+careTaker.saveState(originator.createMemento())
+println("Current state is ${originator.state}")
+
+originator.state = "State 1"
+careTaker.saveState(originator.createMemento())
+println("Current state is ${originator.state}")
+
+originator.state = "State 2"
+careTaker.saveState(originator.createMemento())
+println("Current state is ${originator.state}")
+
+assert(originator.state == "State 2")
+
+originator.restoreMemento(careTaker.restore(1))
+println("Current state is ${originator.state}")
+assert(originator.state == "State 1")
+
+```
+
+refer to
+[Memento](https://github.com/iamjosephmj/kotlin-design-patterns/blob/main/src/main/kotlin/Memento.kt)
+[MementoTest](https://github.com/iamjosephmj/kotlin-design-patterns/blob/main/src/test/kotlin/MementoTest.kt)
+for more insights. 
 
 
 
