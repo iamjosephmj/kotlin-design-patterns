@@ -47,6 +47,7 @@ some super useful links to get the learning materials that I personally recommen
     * [Chain-of-Responsibility](#Chain-of-Responsibility)
     * [Command](#Command)
     * [Strategy](#Strategy)
+    * [State](#State)
 
 ## Introduction
 
@@ -1098,3 +1099,50 @@ val uppercasePrinter = Printer(uppercaseFormatter)
 uppercasePrinter.printString(inputString)
 
 ```
+
+### State
+
+State is a behavioral design pattern that lets an object alter its behavior when its internal state changes. 
+It appears as if the object changed its class.
+
+You can think of an `ACCESS-TOKEN` store in android as a simple example. The store works in two states, It will deliver 
+an access token in when the login is completed, else it will return a state Not-Authorized-Exception. 
+
+If you take a closer look at this scenario, The Characteristics of the Store is actually controlled by state of the 
+module. 
+
+Defining States
+```kotlin
+
+sealed class AuthorizationState
+
+object Unauthorized : AuthorizationState()
+
+class Authorized(val username: String) : AuthorizationState()
+
+```
+
+Auth store implementation
+
+```kotlin
+
+class AuthorizationPresenter {
+    private var state: AuthorizationState = Unauthorized
+
+    val getAccessToken: String
+        get() = when (state) {
+            is Authorized -> "<Some token>"
+            is Unauthorized -> throw IllegalArgumentException()
+        }
+    fun loginUser(username: String) {
+        state = Authorized(username)
+    }
+
+    fun logoutUser() {
+        state = Unauthorized
+    }
+
+}
+
+```
+
